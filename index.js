@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 //for sending new data to DB ----------------------------------
 app.post("/comment", async(req, res) => {
     try {
-        const newData = createCommentData(req.body);
+        const newData = await createCommentData(req.body);
         res.status(201).json({message: "Data added successfully", data: newData})
     } catch (error) {
         res.status(500).json({error: "Failed to add data into database"})
@@ -62,7 +62,30 @@ app.get("/comment", async(req, res) => {
     } catch (error) {
         res.status(500).json({error: "Failed to get data"});
     }
-})
+});
+
+//for fetching lead specific data from DB --------------------------------
+async function getCommentById(id){
+    try {
+        const comment = await CommentData.findById(id);
+        return comment;
+    } catch (error) {
+        throw error;
+    }
+};
+
+app.get("/comment/lead/:leadId", async(req, res) => {
+    try {
+        const comment = await getCommentById(req.params.id);
+        if(comment){
+            res.json(comment);
+        } else {
+            res.status(404).json({message: "Comment not found"});
+        }
+    } catch (error) {
+        res.status(500).json({error: "Failed to get comment"});
+    }
+});
 
 const PORT = 3000;
 

@@ -76,7 +76,7 @@ async function getCommentById(id){
 
 app.get("/comment/lead/:leadId", async(req, res) => {
     try {
-        const comment = await getCommentById(req.params.id);
+        const comment = await getCommentById(req.params.leadId);
         if(comment){
             res.json(comment);
         } else {
